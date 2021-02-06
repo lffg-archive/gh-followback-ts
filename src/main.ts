@@ -23,7 +23,7 @@ async function run() {
     'Checks which of the users you are following follow you back.',
     ''
   ]);
-  const username = await gets('Enter your GitHub username: ');
+  const username = await gets('Enter the GitHub username to lookup: ');
   lastStep = registerStep({
     ...lastStep,
     'Username:': username
@@ -57,7 +57,7 @@ async function run() {
       'You can create a new personal token at:',
       chalk`{cyan https://github.com/settings/tokens/new}`,
       '',
-      'If you do not want to use a personal access token, press enter (leave the field blank).',
+      chalk`If you do not want to use a personal access token, press {bold Enter} (leave the field blank).`,
       ''
     ]);
     personalToken = await gets('Enter your GitHub personal token: ');
