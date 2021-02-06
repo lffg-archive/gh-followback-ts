@@ -1,6 +1,6 @@
 import * as chalk from 'chalk';
 import { humanizeBool } from './utils/human';
-import { puts, gets, cls, getsBoolean, registerStep } from './utils/io';
+import * as io from './utils/io';
 
 export function main(args: string[]): void {
   run()
@@ -12,19 +12,19 @@ export function main(args: string[]): void {
 }
 
 async function run() {
-  let lastStep = registerStep({});
+  let lastStep = io.registerStep({});
 
   //
   // Step 1:
   // Get GitHub username.
   //
-  puts([
+  io.puts([
     chalk`{bold gh-followback} - GitHub Followback Checker`,
     'Checks which of the users you are following follow you back.',
     ''
   ]);
-  const username = await gets('Enter the GitHub username to lookup: ');
-  lastStep = registerStep({
+  const username = await io.gets('Enter the GitHub username to lookup: ');
+  lastStep = io.registerStep({
     ...lastStep,
     'Username:': username
   });
@@ -33,7 +33,7 @@ async function run() {
   // Step 2:
   // Get (or not) the GitHub API personal token.
   //
-  puts([
+  io.puts([
     chalk`GitHub API has a rate limit policy, which makes this CLI unsuitable to fetch a long list of followers and following users. To unauthenticated users, GitHub imposes a maximum of {bold 60 requests per hour}, associated with the originating IP address.`,
     '',
     'To learn more, check the GitHub documentation at:',
@@ -43,24 +43,24 @@ async function run() {
     chalk`{cyan https://github.com/settings/tokens/new}`,
     ''
   ]);
-  let usePersonalToken = await getsBoolean(
+  let usePersonalToken = await io.getsBoolean(
     'Do you want to use a personal access token?',
     { defaultResponse: 'yes' }
   );
   let personalToken: null | string = null;
   if (usePersonalToken) {
-    lastStep = registerStep({
+    lastStep = io.registerStep({
       ...lastStep,
       'Use personal token:': humanizeBool(usePersonalToken)
     });
-    puts([
+    io.puts([
       'You can create a new personal token at:',
       chalk`{cyan https://github.com/settings/tokens/new}`,
       '',
       chalk`If you do not want to use a personal access token, press {bold Enter} (leave the field blank).`,
       ''
     ]);
-    personalToken = await gets('Enter your GitHub personal token: ');
+    personalToken = await io.gets('Enter your GitHub personal token: ');
     if (!personalToken) {
       personalToken = null;
       usePersonalToken = false;
@@ -71,7 +71,7 @@ async function run() {
   // Step 3:
   // Fetch selected user info.
   //
-  registerStep({
+  io.registerStep({
     ...lastStep,
     'Use personal token:': humanizeBool(usePersonalToken)
   });
