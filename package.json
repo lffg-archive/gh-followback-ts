@@ -10,6 +10,7 @@
     "gh-followback": "./build/bin.js"
   },
   "scripts": {
+    "dev": "ts-node ./src/bin.ts",
     "build": "del build && tsc",
     "prepublishOnly": "yarn build"
   },
@@ -23,6 +24,7 @@
     "eslint": "^7.19.0",
     "eslint-config-lffg": "^20.0.0",
     "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
     "typescript": "4"
   },
   "eslintConfig": {
