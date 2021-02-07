@@ -53,7 +53,7 @@ export interface LookupUserDataResponse {
 
 export type LookupUserDataFetcher = (
   request: LookupUserDataRequest
-) => Promise<Result<LookupUserDataResponse, Error>>;
+) => Promise<Result<LookupUserDataResponse, AnyRequestError>>;
 
 //
 // Interfaces and types regarding the request that fetches the users that are
@@ -70,7 +70,7 @@ export interface FollowedByLookupUserListResponse {
 
 export type FollowedByLookupUserListFetcher = (
   request: FollowedByLookupUserListRequest
-) => Promise<Result<FollowedByLookupUserListResponse, Error>>;
+) => Promise<Result<FollowedByLookupUserListResponse, AnyRequestError>>;
 
 //
 // Interfaces and types regarding the request that fetches the users that are
@@ -87,4 +87,30 @@ export interface LookupUserFollowerListResponse {
 
 export type LookupUserFollowerListFetcher = (
   request: LookupUserFollowerListRequest
-) => Promise<Result<LookupUserFollowerListResponse, Error>>;
+) => Promise<Result<LookupUserFollowerListResponse, AnyRequestError>>;
+
+//
+// Common request errors.
+//
+
+export interface RequestError {
+  id: string;
+  status: number;
+  message: string;
+  responseJSON: unknown;
+}
+
+export interface RateLimitRequestError extends RequestError {
+  id: 'RateLimitRequestError';
+  status: 403;
+}
+
+export interface AuthenticationRequestError extends RequestError {
+  id: 'AuthenticationRequestError';
+  status: 401;
+}
+
+export type AnyRequestError =
+  | RequestError
+  | RateLimitRequestError
+  | AuthenticationRequestError;
