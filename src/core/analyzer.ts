@@ -7,7 +7,7 @@ export enum FollowStatus {
    *
    * Correspondent core type: `LookupUserFollower*`.
    */
-  IS_FOLLOWING_LOOKUP_USER = 0b10,
+  IS_FOLLOWING_LOOKUP_USER = 0b01,
 
   /**
    * Determines if the current user is **followed by** the lookup user.
@@ -15,7 +15,7 @@ export enum FollowStatus {
    *
    * Correspondent core type: `LookupUserFollowing*`.
    */
-  IS_FOLLOWED_BY_LOOKUP_USER = 0b01,
+  IS_FOLLOWED_BY_LOOKUP_USER = 0b10,
 
   /**
    * Determines if the lookup user follows and is followed by the current user.
