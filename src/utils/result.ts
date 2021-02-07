@@ -84,3 +84,29 @@ export function unwrapOrElse<
 
   throw new Error('Unreachable.');
 }
+
+/**
+ * Given a promise, returns a `Result<T, E>` where `T` is the promise's
+ * resolution type and `E` is unknown (which may be an error thrown by the
+ * promise).
+ */
+export function wrapPromise<T>(
+  promise: Promise<T>
+): Promise<Result<T, unknown>> {
+  return promise.then(ok).catch((error: unknown) => err(error));
+}
+
+/**
+ * Given an array of results of type `Array<Result<T, E>>`, returns a result of
+ * type `Result<T[], E>`.
+ */
+export function packResults<T, E>(results: Result<T, E>[]): Result<T[], E> {
+  const final: T[] = [];
+  for (const result of results) {
+    if (isErr(result)) {
+      return result;
+    }
+    final.push(result.data);
+  }
+  return ok(final);
+}
