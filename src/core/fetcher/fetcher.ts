@@ -1,5 +1,5 @@
 import * as pLimit from 'p-limit';
-import { ok, isErr, packResults, Result } from '../../utils/result';
+import { ok, isErr, packResults, PResult } from '../../utils/result';
 import type * as T from '../types';
 
 const PER_PAGE_COUNT = 100;
@@ -100,7 +100,7 @@ interface FetcherData {
 
 async function followListsFetcherAbstraction(
   $data: FetcherData
-): Promise<Result<string[], T.AnyRequestError>> {
+): PResult<string[], T.AnyRequestError> {
   const pages = Math.ceil($data.followListCount / PER_PAGE_COUNT);
 
   const createFetch = (page: number) =>

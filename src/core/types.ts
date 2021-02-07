@@ -1,4 +1,4 @@
-import { Result } from '../utils/result';
+import { PResult } from '../utils/result';
 
 //
 // Main types.
@@ -54,7 +54,7 @@ export interface LookupUserDataResponse {
 
 export type LookupUserDataFetcher = (
   request: LookupUserDataRequest
-) => Promise<Result<LookupUserDataResponse, AnyRequestError>>;
+) => PResult<LookupUserDataResponse, AnyRequestError>;
 
 //
 // Interfaces and types regarding the request that fetches the users that are
@@ -72,7 +72,7 @@ export interface LookupUserFollowerListResponse {
 
 export type LookupUserFollowerListFetcher = (
   request: LookupUserFollowerListRequest
-) => Promise<Result<LookupUserFollowerListResponse, AnyRequestError>>;
+) => PResult<LookupUserFollowerListResponse, AnyRequestError>;
 
 //
 // Interfaces and types regarding the request that fetches the users that are
@@ -90,7 +90,7 @@ export interface LookupUserFollowingListResponse {
 
 export type LookupUserFollowingListFetcher = (
   request: LookupUserFollowingListRequest
-) => Promise<Result<LookupUserFollowingListResponse, AnyRequestError>>;
+) => PResult<LookupUserFollowingListResponse, AnyRequestError>;
 
 //
 // Common request errors.
@@ -135,4 +135,4 @@ export interface GitHUbAPIResponse<T> {
 
 export type GitHubAPIFetcher = <T>(
   request: GitHubAPIRequest
-) => Promise<Result<GitHUbAPIResponse<T>, AnyRequestError>>;
+) => PResult<GitHUbAPIResponse<T>, AnyRequestError>;

@@ -4,6 +4,8 @@ export type Err<E> = { status: 'err'; data: E };
 export type AnyResult = Result<unknown, unknown>;
 export type Result<T, E> = Ok<T> | Err<E>;
 
+export type PResult<T, E> = Promise<Result<T, E>>;
+
 export type ExtractOk<R extends AnyResult, Default = never> = R extends Ok<
   infer OkT
 >
@@ -90,9 +92,7 @@ export function unwrapOrElse<
  * resolution type and `E` is unknown (which may be an error thrown by the
  * promise).
  */
-export function wrapPromise<T>(
-  promise: Promise<T>
-): Promise<Result<T, unknown>> {
+export function wrapPromise<T>(promise: Promise<T>): PResult<T, unknown> {
   return promise.then(ok).catch((error: unknown) => err(error));
 }
 
