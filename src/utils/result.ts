@@ -1,16 +1,36 @@
+/**
+ * The `Ok` (type) variation.
+ */
 export type Ok<T> = { status: 'ok'; data: T };
+/**
+ * The `Err` (type) variation.
+ */
 export type Err<E> = { status: 'err'; data: E };
 
-export type AnyResult = Result<unknown, unknown>;
+/**
+ * **Super** simple adaptation of Rust's `Result<T, E>` type.
+ */
 export type Result<T, E> = Ok<T> | Err<E>;
-
+/**
+ * Alias of `Result<unknown, unknown>`.
+ */
+export type AnyResult = Result<unknown, unknown>;
+/**
+ * Alias of `Promise<Result<T, E>>`.
+ */
 export type PResult<T, E> = Promise<Result<T, E>>;
 
+/**
+ * Given a `Result<T, E>`, extracts type `T` (`Ok` variant).
+ */
 export type ExtractOk<R extends AnyResult, Default = never> = R extends Ok<
   infer OkT
 >
   ? OkT
   : Default;
+/**
+ * Given a `Result<T, E>`, extracts type `E` (`Err` variant).
+ */
 export type ExtractErr<R extends AnyResult, Default = never> = R extends Err<
   infer ErrT
 >
