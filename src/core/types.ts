@@ -43,6 +43,7 @@ export interface LookupUserData {
 //
 
 export interface LookupUserDataRequest {
+  accessToken?: string;
   username: string;
 }
 
@@ -61,6 +62,7 @@ export type LookupUserDataFetcher = (
 //
 
 export interface FollowedByLookupUserListRequest {
+  accessToken?: string;
   lookupUserData: LookupUserData;
 }
 
@@ -78,6 +80,7 @@ export type FollowedByLookupUserListFetcher = (
 //
 
 export interface LookupUserFollowerListRequest {
+  accessToken?: string;
   lookupUserData: LookupUserData;
 }
 
@@ -120,10 +123,16 @@ export type AnyRequestError =
 //
 
 export interface GitHubAPIRequest {
+  accessToken?: string;
   path: string;
-  accessToken: string | null;
+  params?: Record<string, string | number>;
+}
+
+export interface GitHUbAPIResponse<T> {
+  rateLimitInformation: RateLimitInformation;
+  data: T;
 }
 
 export type GitHubAPIFetcher = <T>(
   request: GitHubAPIRequest
-) => Promise<Result<T, AnyRequestError>>;
+) => Promise<Result<GitHUbAPIResponse<T>, AnyRequestError>>;
