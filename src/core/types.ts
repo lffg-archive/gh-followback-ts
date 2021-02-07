@@ -124,6 +124,6 @@ export interface GitHubAPIRequest {
   accessToken: string | null;
 }
 
-export type GitHubAPIFetcher<T> = (
+export type GitHubAPIFetcher = <T>(
   request: GitHubAPIRequest
 ) => Promise<Result<T, AnyRequestError>>;
