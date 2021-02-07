@@ -4,15 +4,15 @@ import { Result } from '../utils/result';
 // Main types.
 //
 
-export type FollowedByLookupUserList = string[];
 export type LookupUserFollowerList = string[];
+export type LookupUserFollowingList = string[];
 
-export type FollowedByLookupUserCount = number;
 export type LookupUserFollowerCount = number;
+export type LookupUserFollowingCount = number;
 
 export interface FollowLists {
-  followedByLookupUserList: FollowedByLookupUserList;
   lookupUserFollowerList: LookupUserFollowerList;
+  lookupUserFollowingList: LookupUserFollowingList;
 }
 
 export type FollowMap = Record<string, number>;
@@ -33,8 +33,8 @@ export interface RateLimitInformation {
 
 export interface LookupUserData {
   username: string;
-  followedByLookupUserCount: FollowedByLookupUserCount;
   lookupUserFollowerCount: LookupUserFollowerCount;
+  lookupUserFollowingCount: LookupUserFollowingCount;
 }
 
 //
@@ -58,24 +58,6 @@ export type LookupUserDataFetcher = (
 
 //
 // Interfaces and types regarding the request that fetches the users that are
-// followed by the lookup user (aka. "lookup user followings").
-//
-
-export interface FollowedByLookupUserListRequest {
-  accessToken?: string;
-  lookupUserData: LookupUserData;
-}
-
-export interface FollowedByLookupUserListResponse {
-  followedByLookupUserList: FollowedByLookupUserList;
-}
-
-export type FollowedByLookupUserListFetcher = (
-  request: FollowedByLookupUserListRequest
-) => Promise<Result<FollowedByLookupUserListResponse, AnyRequestError>>;
-
-//
-// Interfaces and types regarding the request that fetches the users that are
 // following the lookup user (aka. "lookup user followers").
 //
 
@@ -91,6 +73,24 @@ export interface LookupUserFollowerListResponse {
 export type LookupUserFollowerListFetcher = (
   request: LookupUserFollowerListRequest
 ) => Promise<Result<LookupUserFollowerListResponse, AnyRequestError>>;
+
+//
+// Interfaces and types regarding the request that fetches the users that are
+// followed by the lookup user (aka. "lookup user followings").
+//
+
+export interface LookupUserFollowingListRequest {
+  accessToken?: string;
+  lookupUserData: LookupUserData;
+}
+
+export interface LookupUserFollowingListResponse {
+  lookupUserFollowingList: LookupUserFollowingList;
+}
+
+export type LookupUserFollowingListFetcher = (
+  request: LookupUserFollowingListRequest
+) => Promise<Result<LookupUserFollowingListResponse, AnyRequestError>>;
 
 //
 // Common request errors.
@@ -119,7 +119,7 @@ export type AnyRequestError =
   | AuthenticationRequestError;
 
 //
-// Basic fetcher contract
+// Basic fetcher contract.
 //
 
 export interface GitHubAPIRequest {

@@ -33,35 +33,10 @@ export function createLookupUserDataFetcher({
     return ok({
       lookupUserData: {
         username: data.login,
-        followedByLookupUserCount: data.following,
-        lookupUserFollowerCount: data.followers
+        lookupUserFollowerCount: data.followers,
+        lookupUserFollowingCount: data.following
       },
       rateLimitInformation
-    });
-  };
-}
-
-export function createFollowedByLookupUserListFetcher({
-  gitHubAPIFetcher
-}: CommonDeps): T.FollowedByLookupUserListFetcher {
-  type GHResponse = Array<{
-    login: string;
-  }>;
-
-  return async function followedByLookupUserListFetcher(request) {
-    const result = await followListsFetcherAbstraction({
-      gitHubAPIFetcher,
-      path: `/users/${request.lookupUserData.username}/following`,
-      accessToken: request.accessToken,
-      followListCount: request.lookupUserData.lookupUserFollowerCount
-    });
-
-    if (isErr(result)) {
-      return result;
-    }
-
-    return ok({
-      followedByLookupUserList: result.data
     });
   };
 }
@@ -83,6 +58,31 @@ export function createLookupUserFollowerListFetcher({
 
     return ok({
       lookupUserFollowerList: result.data
+    });
+  };
+}
+
+export function createLookupUserFollowingListFetcher({
+  gitHubAPIFetcher
+}: CommonDeps): T.LookupUserFollowingListFetcher {
+  type GHResponse = Array<{
+    login: string;
+  }>;
+
+  return async function lookupUserFollowingListFetcher(request) {
+    const result = await followListsFetcherAbstraction({
+      gitHubAPIFetcher,
+      path: `/users/${request.lookupUserData.username}/following`,
+      accessToken: request.accessToken,
+      followListCount: request.lookupUserData.lookupUserFollowerCount
+    });
+
+    if (isErr(result)) {
+      return result;
+    }
+
+    return ok({
+      lookupUserFollowingList: result.data
     });
   };
 }
