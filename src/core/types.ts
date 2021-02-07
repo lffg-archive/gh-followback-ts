@@ -1,8 +1,8 @@
+import { Result } from '../utils/result';
+
 //
 // Main types.
 //
-
-import { Result } from '../utils/result';
 
 export type FollowedByLookupUserList = string[];
 export type LookupUserFollowerList = string[];
