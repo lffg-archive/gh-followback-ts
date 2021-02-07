@@ -114,3 +114,16 @@ export type AnyRequestError =
   | RequestError
   | RateLimitRequestError
   | AuthenticationRequestError;
+
+//
+// Basic fetcher contract
+//
+
+export interface GitHubAPIRequest {
+  path: string;
+  accessToken: string | null;
+}
+
+export type GitHubAPIFetcher<T> = (
+  request: GitHubAPIRequest
+) => Promise<Result<T, AnyRequestError>>;
