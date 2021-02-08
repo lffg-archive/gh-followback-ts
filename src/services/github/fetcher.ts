@@ -1,13 +1,17 @@
 import { URL } from 'url';
 import fetch, { Headers } from 'node-fetch';
-import { GitHubAPIFetcher, GitHubAPIRequest } from '../../core/types';
-import { ok, err, wrapPromise, isErr } from '../../utils/result';
+import {
+  AnyRequestError,
+  GitHubAPIRequest,
+  GitHUbAPIResponse
+} from '../../core/types';
+import { ok, err, wrapPromise, isErr, PResult } from '../../utils/result';
 
 const BASE_GITHUB_API = 'https://api.github.com';
 
-export const gitHubAPIFetcher: GitHubAPIFetcher = async <T>(
+export async function gitHubAPIFetcher<T>(
   request: GitHubAPIRequest
-) => {
+): PResult<GitHUbAPIResponse<T>, AnyRequestError> {
   const { path, accessToken, queryParams } = request;
 
   const url = new URL(path, BASE_GITHUB_API);
@@ -78,5 +82,19 @@ export const gitHubAPIFetcher: GitHubAPIFetcher = async <T>(
     });
   }
 
-  return ok(jsonResult.data as T);
-};
+  const getH = (name: string, fallback: { toString(): string }) =>
+    response.headers.get(name) ?? fallback.toString();
+
+  return ok({
+    data: json,
+    rateLimitInformation: {
+      total: parseInt(getH('x-ratelimit-limit', 60), 10),
+      remaining: parseInt(getH('x-ratelimit-remaining', 0), 10),
+
+      // The `* 1000` is needed because the JavaScript `Date` type uses a
+      // timestamp with milliseconds precision. GitHub API returns a timestamp
+      // with seconds precision.
+      reset: new Date(parseInt(getH('x-ratelimit-remaining', 0), 10) * 1000)
+    }
+  });
+}
