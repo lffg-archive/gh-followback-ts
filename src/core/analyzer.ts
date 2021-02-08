@@ -46,3 +46,17 @@ export function createFollowMap({
 
   return map;
 }
+
+/**
+ * Returns a subset of the follow map in an array format after a filter process.
+ */
+export function filterFollowMap(
+  map: FollowMap,
+  pred: (status: number) => boolean
+): string[] {
+  return Object.entries(map).reduce<string[]>(
+    (accumulator, [username, status]) =>
+      pred(status) ? accumulator.concat(username) : accumulator,
+    []
+  );
+}
