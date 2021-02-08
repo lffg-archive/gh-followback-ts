@@ -107,9 +107,9 @@ async function followListsFetcherAbstraction(
     $data.gitHubAPIFetcher<Array<{ login: string }>>({
       path: $data.path,
       accessToken: $data.accessToken,
-      params: {
-        per_page: PER_PAGE_COUNT,
-        page
+      queryParams: {
+        per_page: PER_PAGE_COUNT.toString(),
+        page: page.toString()
       }
     });
 

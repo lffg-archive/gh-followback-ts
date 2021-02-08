@@ -125,7 +125,7 @@ export type AnyRequestError =
 export interface GitHubAPIRequest {
   accessToken?: string;
   path: string;
-  params?: Record<string, string | number>;
+  queryParams?: Record<string, string>;
 }
 
 export interface GitHUbAPIResponse<T> {
