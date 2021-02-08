@@ -2,7 +2,8 @@ import * as pLimit from 'p-limit';
 import { isErr, ok, packResults, PResult } from '../../../utils/result';
 import type { AnyFetchError } from '../../types/errors';
 import { GitHubAPIFetcher } from '../../types/github-adapter';
-import { CONCURRENCY_LIMIT, PER_PAGE_COUNT } from './constants';
+import { CONCURRENCY_LIMIT } from './constants';
+import { computePaginationInfo } from './pagination';
 
 interface FetchPagedFollowListData {
   gitHubAPIFetcher: GitHubAPIFetcher;
@@ -17,14 +18,14 @@ export async function fetchPagedFollowList({
   accessToken,
   followListCount
 }: FetchPagedFollowListData): PResult<string[], AnyFetchError> {
-  const pages = Math.ceil(followListCount / PER_PAGE_COUNT);
+  const { pages, perPageCount } = computePaginationInfo(followListCount);
 
   const createFetch = (page: number) =>
     gitHubAPIFetcher<Array<{ login: string }>>({
       path,
       accessToken,
       queryParams: {
-        per_page: PER_PAGE_COUNT.toString(),
+        per_page: perPageCount.toString(),
         page: page.toString()
       }
     });
