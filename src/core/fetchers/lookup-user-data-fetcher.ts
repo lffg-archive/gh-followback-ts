@@ -1,5 +1,5 @@
 import { isErr, ok } from '../../utils/result';
-import type { LookupUserDataFetcher } from '../types/fetcher';
+import type { LookupUserDataFetcher } from '../types/fetchers';
 import type { GitHubAPIFetcher } from '../types/github-adapter';
 
 interface Deps {

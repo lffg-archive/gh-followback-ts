@@ -1,5 +1,5 @@
 import { isErr, ok } from '../../utils/result';
-import type { LookupUserFollowerListFetcher } from '../types/fetcher';
+import type { LookupUserFollowerListFetcher } from '../types/fetchers';
 import type { GitHubAPIFetcher } from '../types/github-adapter';
 import { fetchPagedFollowList } from './internal/fetch-paged-follow-list';
 
