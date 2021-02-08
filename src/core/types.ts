@@ -96,25 +96,35 @@ export type LookupUserFollowingListFetcher = (
 // Common request errors.
 //
 
-export interface RequestError {
-  id: string;
+export interface RequestProcessingError {
+  code: 'RequestProcessingError';
+  message: string;
+  errorObject: unknown;
+}
+
+export interface RequestUnknownError {
+  code: 'RequestUnknownError';
   status: number;
+  responseJSON: unknown;
+}
+
+export interface RateLimitRequestError {
+  code: 'RateLimitRequestError';
+  status: 403;
   message: string;
   responseJSON: unknown;
 }
 
-export interface RateLimitRequestError extends RequestError {
-  id: 'RateLimitRequestError';
-  status: 403;
-}
-
-export interface AuthenticationRequestError extends RequestError {
-  id: 'AuthenticationRequestError';
+export interface AuthenticationRequestError {
+  code: 'AuthenticationRequestError';
   status: 401;
+  message: string;
+  responseJSON: unknown;
 }
 
 export type AnyRequestError =
-  | RequestError
+  | RequestProcessingError
+  | RequestUnknownError
   | RateLimitRequestError
   | AuthenticationRequestError;
 
