@@ -1,18 +1,18 @@
 import { gitHubAPIFetcher } from '../../services/github-api-fetcher';
-import * as Fetcher from './fetchers';
+import { createLookupUserDataFetcher } from './lookup-user-data-fetcher';
+import { createLookupUserFollowerListFetcher } from './lookup-user-follower-list-fetcher';
+import { createLookupUserFollowingListFetcher } from './lookup-user-following-list-fetcher';
 
 const commonDeps = {
   gitHubAPIFetcher
 };
 
-export const lookupUserDataFetcher = Fetcher.createLookupUserDataFetcher(
+export const lookupUserDataFetcher = createLookupUserDataFetcher(commonDeps);
+
+export const lookupUserFollowerListFetcher = createLookupUserFollowerListFetcher(
   commonDeps
 );
 
-export const lookupUserFollowerListFetcher = Fetcher.createLookupUserFollowerListFetcher(
-  commonDeps
-);
-
-export const lookupUserFollowingListFetcher = Fetcher.createLookupUserFollowingListFetcher(
+export const lookupUserFollowingListFetcher = createLookupUserFollowingListFetcher(
   commonDeps
 );
