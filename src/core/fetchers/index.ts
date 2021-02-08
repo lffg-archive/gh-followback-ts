@@ -1,5 +1,5 @@
-import { gitHubAPIFetcher } from '../../services/github/fetcher';
-import * as Fetcher from './fetcher';
+import { gitHubAPIFetcher } from '../../services/github-api-fetcher';
+import * as Fetcher from './fetchers';
 
 const commonDeps = {
   gitHubAPIFetcher

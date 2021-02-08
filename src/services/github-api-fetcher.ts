@@ -1,17 +1,17 @@
 import { URL } from 'url';
 import fetch, { Headers } from 'node-fetch';
-import {
-  AnyRequestError,
+import { AnyFetchError } from '../core/types/errors';
+import type {
   GitHubAPIRequest,
   GitHUbAPIResponse
-} from '../../core/types';
-import { ok, err, wrapPromise, isErr, PResult } from '../../utils/result';
+} from '../core/types/github-adapter';
+import { ok, err, wrapPromise, isErr, PResult } from '../utils/result';
 
 const BASE_GITHUB_API = 'https://api.github.com';
 
 export async function gitHubAPIFetcher<T>(
   request: GitHubAPIRequest
-): PResult<GitHUbAPIResponse<T>, AnyRequestError> {
+): PResult<GitHUbAPIResponse<T>, AnyFetchError> {
   const { path, accessToken, queryParams } = request;
 
   const url = new URL(path, BASE_GITHUB_API);

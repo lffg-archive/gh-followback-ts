@@ -1,4 +1,4 @@
-import type { FollowLists, FollowMap } from './types';
+import type { FollowLists, FollowMap } from './types/core';
 
 export enum FollowStatus {
   /**

@@ -1,17 +1,23 @@
 import * as pLimit from 'p-limit';
 import { ok, isErr, packResults, PResult } from '../../utils/result';
-import type * as T from '../types';
+import type { AnyFetchError } from '../types/errors';
+import type {
+  LookupUserDataFetcher,
+  LookupUserFollowerListFetcher,
+  LookupUserFollowingListFetcher
+} from '../types/fetcher';
+import type { GitHubAPIFetcher } from '../types/github-adapter';
 
 const PER_PAGE_COUNT = 100;
 const CONCURRENCY_LIMIT = 5;
 
 interface CommonDeps {
-  gitHubAPIFetcher: T.GitHubAPIFetcher;
+  gitHubAPIFetcher: GitHubAPIFetcher;
 }
 
 export function createLookupUserDataFetcher({
   gitHubAPIFetcher
-}: CommonDeps): T.LookupUserDataFetcher {
+}: CommonDeps): LookupUserDataFetcher {
   interface GHResponse {
     login: string;
     followers: number;
@@ -43,7 +49,7 @@ export function createLookupUserDataFetcher({
 
 export function createLookupUserFollowerListFetcher({
   gitHubAPIFetcher
-}: CommonDeps): T.LookupUserFollowerListFetcher {
+}: CommonDeps): LookupUserFollowerListFetcher {
   return async function lookupUserFollowerListFetcher(request) {
     const result = await followListsFetcherAbstraction({
       gitHubAPIFetcher,
@@ -64,7 +70,7 @@ export function createLookupUserFollowerListFetcher({
 
 export function createLookupUserFollowingListFetcher({
   gitHubAPIFetcher
-}: CommonDeps): T.LookupUserFollowingListFetcher {
+}: CommonDeps): LookupUserFollowingListFetcher {
   type GHResponse = Array<{
     login: string;
   }>;
@@ -92,7 +98,7 @@ export function createLookupUserFollowingListFetcher({
 //
 
 interface FetcherData {
-  gitHubAPIFetcher: T.GitHubAPIFetcher;
+  gitHubAPIFetcher: GitHubAPIFetcher;
   path: string;
   accessToken?: string;
   followListCount: number;
@@ -100,7 +106,7 @@ interface FetcherData {
 
 async function followListsFetcherAbstraction(
   $data: FetcherData
-): PResult<string[], T.AnyRequestError> {
+): PResult<string[], AnyFetchError> {
   const pages = Math.ceil($data.followListCount / PER_PAGE_COUNT);
 
   const createFetch = (page: number) =>
