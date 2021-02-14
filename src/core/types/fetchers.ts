@@ -1,6 +1,19 @@
 import type { PResult } from '../../utils/result';
 import type * as core from './core';
-import type { AnyFetchError } from './errors';
+import type { AnyApplicationError, AnyFetchError } from './errors';
+
+//
+// MainFollowLists
+//
+
+export interface MainFollowListsFetcherData {
+  accessToken?: string;
+  username: string;
+}
+
+export type MainFollowListsFetcher = (
+  data: MainFollowListsFetcherData
+) => PResult<core.FollowLists, AnyApplicationError>;
 
 //
 // LookupUserData
