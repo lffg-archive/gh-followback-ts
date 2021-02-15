@@ -31,7 +31,7 @@ export function createMainFollowListsFetcher(
     const total = followersPaginationInfo.pages + followingPaginationInfo.pages;
     const available = rateLimitInformation.remaining;
 
-    if (total > rateLimitInformation.remaining) {
+    if (total > available) {
       return err({
         code: 'TooSmallRateLimitQuotaError',
         available,
