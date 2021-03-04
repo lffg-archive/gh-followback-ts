@@ -1,38 +1,34 @@
 import { assertNever } from '../../../utils/assertions';
 import type { AnyFetchError, AnyApplicationError } from '../../types/errors';
 
-function createJSONError(data: unknown): Error & { data: unknown } {
-  const error: Error & { data: unknown } = new Error() as any;
-  error.data = data;
-  return error;
-}
-
 export function mapFetchErrorToApplicationError(
   error: AnyFetchError
 ): AnyApplicationError {
   switch (error.code) {
-    case 'RequestUnknownError':
+    case 'UnknownApplicationError':
+      return error;
+
+    case 'UnknownFetchError':
       return {
-        code: 'UnknownError',
-        errorObject: createJSONError(error.responseJSON)
+        code: 'UnknownApplicationError',
+        error: error.responseJSON
       };
 
-    case 'RequestProcessingError':
+    case 'RateLimitFetchError':
       return {
-        code: 'UnknownError',
-        errorObject: error.errorObject
+        code: 'TooSmallRateLimitQuotaApplicationError',
+        available: error.rateLimitInformation.total,
+        totalRequired: 1
       };
 
-    case 'RateLimitRequestError':
+    case 'UserNotFoundFetchError':
       return {
-        code: 'TooSmallRateLimitQuotaError',
-        available: 0, // FIXME
-        totalRequired: 0 // FIXME
+        code: 'UserNotFoundApplicationError'
       };
 
-    case 'AuthenticationRequestError':
+    case 'AuthenticationFetchError':
       return {
-        code: 'InvalidAccessTokenError'
+        code: 'InvalidAccessTokenApplicationError'
       };
 
     default:

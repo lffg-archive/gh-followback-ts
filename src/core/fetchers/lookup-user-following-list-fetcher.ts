@@ -10,10 +10,6 @@ interface Deps {
 export function createLookupUserFollowingListFetcher({
   gitHubAPIFetcher
 }: Deps): LookupUserFollowingListFetcher {
-  type GHResponse = Array<{
-    login: string;
-  }>;
-
   return async function lookupUserFollowingListFetcher(request) {
     const result = await fetchPagedFollowList({
       gitHubAPIFetcher,

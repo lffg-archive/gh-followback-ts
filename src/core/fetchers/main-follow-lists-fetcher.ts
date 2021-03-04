@@ -33,7 +33,7 @@ export function createMainFollowListsFetcher(
 
     if (total > available) {
       return err({
-        code: 'TooSmallRateLimitQuotaError',
+        code: 'TooSmallRateLimitQuotaApplicationError',
         available,
         totalRequired: total
       });

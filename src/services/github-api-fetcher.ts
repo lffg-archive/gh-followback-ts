@@ -1,6 +1,7 @@
 import { URL } from 'url';
-import fetch, { Headers } from 'node-fetch';
-import { AnyFetchError } from '../core/types/errors';
+import fetch, { Headers, Response } from 'node-fetch';
+import type { RateLimitInformation } from '../core/types/core';
+import type { AnyFetchError } from '../core/types/errors';
 import type {
   GitHubAPIRequest,
   GitHubAPIResponse
@@ -34,9 +35,8 @@ export async function gitHubAPIFetcher<T>(
 
   if (isErr(responseResult)) {
     return err({
-      code: 'RequestProcessingError',
-      message: 'Unknown request error',
-      errorObject: responseResult.data
+      code: 'UnknownApplicationError',
+      error: responseResult.data
     });
   }
 
@@ -45,9 +45,8 @@ export async function gitHubAPIFetcher<T>(
 
   if (isErr(jsonResult)) {
     return err({
-      code: 'RequestProcessingError',
-      message: 'Error while parsing the request response as JSON',
-      errorObject: jsonResult.data
+      code: 'UnknownApplicationError',
+      error: jsonResult.data
     });
   }
 
@@ -57,9 +56,16 @@ export async function gitHubAPIFetcher<T>(
     // If the `accessToken` was invalid (aka. unauthenticated).
     if (response.status === 401) {
       return err({
-        code: 'AuthenticationRequestError',
+        code: 'AuthenticationFetchError',
         status: 401,
-        message: (json.message as string) || '',
+        responseJSON: json
+      });
+    }
+
+    if (response.status === 404) {
+      return err({
+        code: 'UserNotFoundFetchError',
+        status: 404,
         responseJSON: json
       });
     }
@@ -67,34 +73,41 @@ export async function gitHubAPIFetcher<T>(
     // If the rate limit was exceeded.
     if (response.status === 403 && json.message === '') {
       return err({
-        code: 'RateLimitRequestError',
+        code: 'RateLimitFetchError',
+        rateLimitInformation: getRateLimitInformation(response),
         status: 403,
-        message: (json.message as string) || '',
         responseJSON: json
       });
     }
 
     // Generic error case.
     return err({
-      code: 'RequestUnknownError',
+      code: 'UnknownFetchError',
       status: response.status,
       responseJSON: json
     });
   }
 
+  return ok({
+    data: json,
+    rateLimitInformation: getRateLimitInformation(response)
+  });
+}
+
+/**
+ * Internal function. Given a response, creates a `RateLimitInformation` obj.
+ */
+function getRateLimitInformation(response: Response): RateLimitInformation {
   const getH = (name: string, fallback: { toString(): string }) =>
     response.headers.get(name) ?? fallback.toString();
 
-  return ok({
-    data: json,
-    rateLimitInformation: {
-      total: parseInt(getH('x-ratelimit-limit', 60), 10),
-      remaining: parseInt(getH('x-ratelimit-remaining', 0), 10),
+  return {
+    total: parseInt(getH('x-ratelimit-limit', 60), 10),
+    remaining: parseInt(getH('x-ratelimit-remaining', 0), 10),
 
-      // The `* 1000` is needed because the JavaScript `Date` type uses a
-      // timestamp with milliseconds precision. GitHub API returns a timestamp
-      // with seconds precision.
-      reset: new Date(parseInt(getH('x-ratelimit-remaining', 0), 10) * 1000)
-    }
-  });
+    // The `* 1000` is needed because the JavaScript `Date` type uses a
+    // timestamp with milliseconds precision. GitHub API returns a timestamp
+    // with seconds precision.
+    reset: new Date(parseInt(getH('x-ratelimit-remaining', 0), 10) * 1000)
+  };
 }

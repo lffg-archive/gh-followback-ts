@@ -1,24 +1,32 @@
+import type { RateLimitInformation } from './core';
+
 //
 // Application errors.
 //
 
 export interface UnknownApplicationError {
-  code: 'UnknownError';
-  errorObject: unknown;
+  code: 'UnknownApplicationError';
+  error: unknown;
 }
 
+// May be returned in a "preflight" check.
 export interface TooSmallRateLimitQuotaApplicationError {
-  code: 'TooSmallRateLimitQuotaError';
+  code: 'TooSmallRateLimitQuotaApplicationError';
   available: number;
   totalRequired: number;
 }
 
+export interface UserNotFoundApplicationError {
+  code: 'UserNotFoundApplicationError';
+}
+
 export interface InvalidAccessTokenApplicationError {
-  code: 'InvalidAccessTokenError';
+  code: 'InvalidAccessTokenApplicationError';
 }
 
 export type AnyApplicationError =
   | UnknownApplicationError
+  | UserNotFoundApplicationError
   | TooSmallRateLimitQuotaApplicationError
   | InvalidAccessTokenApplicationError;
 
@@ -27,36 +35,33 @@ export type AnyApplicationError =
 //
 
 export interface UnknownFetchError {
-  code: 'RequestUnknownError';
+  code: 'UnknownFetchError';
   status: number;
   responseJSON: unknown;
 }
 
-export interface ProcessingFetchError {
-  code: 'RequestProcessingError';
-  message: string;
-  errorObject: unknown;
+export interface RateLimitFetchError {
+  code: 'RateLimitFetchError';
+  rateLimitInformation: RateLimitInformation;
+  status: 403;
+  responseJSON: unknown;
 }
 
-export interface RateLimitFetchError {
-  code: 'RateLimitRequestError';
-  status: 403;
-  message: string;
+export interface UserNotFoundFetchError {
+  code: 'UserNotFoundFetchError';
+  status: 404;
   responseJSON: unknown;
-
-  // TODO: Add current rate limit information
-  // rateLimitInformation: RateLimitInformation;
 }
 
 export interface AuthenticationFetchError {
-  code: 'AuthenticationRequestError';
+  code: 'AuthenticationFetchError';
   status: 401;
-  message: string;
   responseJSON: unknown;
 }
 
 export type AnyFetchError =
+  | UnknownApplicationError
   | UnknownFetchError
-  | ProcessingFetchError
   | RateLimitFetchError
+  | UserNotFoundFetchError
   | AuthenticationFetchError;
