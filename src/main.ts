@@ -3,6 +3,8 @@ import { humanizeBool } from './utils/human';
 import * as io from './utils/io';
 
 export function main(args: string[]): void {
+  void args;
+
   run()
     .then(() => process.exit(0))
     .catch((error) => {

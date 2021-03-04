@@ -2,6 +2,7 @@
   "include": ["src"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "lib": ["es2019"],
     "outDir": "build",
     "rootDir": "src",
     "target": "es6",
