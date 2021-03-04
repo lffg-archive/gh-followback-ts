@@ -11,6 +11,11 @@ export interface FollowLists {
 
 export type FollowMap = Record<string, number>;
 
+export interface InitialUserData {
+  username: string;
+  accessToken?: string;
+}
+
 export interface LookupUserData {
   username: string;
   lookupUserFollowerCount: LookupUserFollowerCount;

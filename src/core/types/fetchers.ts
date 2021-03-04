@@ -1,28 +1,19 @@
 import type { PResult } from '../../utils/result';
 import type * as core from './core';
+import type { InitialUserData } from './core';
 import type { AnyApplicationError, AnyFetchError } from './errors';
 
 //
 // MainFollowLists
 //
 
-export interface MainFollowListsFetcherData {
-  accessToken?: string;
-  username: string;
-}
-
 export type MainFollowListsFetcher = (
-  data: MainFollowListsFetcherData
+  data: InitialUserData
 ) => PResult<core.FollowLists, AnyApplicationError>;
 
 //
 // LookupUserData
 //
-
-export interface LookupUserDataRequest {
-  accessToken?: string;
-  username: string;
-}
 
 export interface LookupUserDataResponse {
   rateLimitInformation: core.RateLimitInformation;
@@ -30,7 +21,7 @@ export interface LookupUserDataResponse {
 }
 
 export type LookupUserDataFetcher = (
-  request: LookupUserDataRequest
+  request: InitialUserData
 ) => PResult<LookupUserDataResponse, AnyFetchError>;
 
 //
