@@ -3,7 +3,7 @@ import fetch, { Headers } from 'node-fetch';
 import { AnyFetchError } from '../core/types/errors';
 import type {
   GitHubAPIRequest,
-  GitHUbAPIResponse
+  GitHubAPIResponse
 } from '../core/types/github-adapter';
 import { ok, err, wrapPromise, isErr, PResult } from '../utils/result';
 
@@ -11,7 +11,7 @@ const BASE_GITHUB_API = 'https://api.github.com';
 
 export async function gitHubAPIFetcher<T>(
   request: GitHubAPIRequest
-): PResult<GitHUbAPIResponse<T>, AnyFetchError> {
+): PResult<GitHubAPIResponse<T>, AnyFetchError> {
   const { path, accessToken, queryParams } = request;
 
   const url = new URL(path, BASE_GITHUB_API);

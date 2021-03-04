@@ -8,11 +8,11 @@ export interface GitHubAPIRequest {
   queryParams?: Record<string, string>;
 }
 
-export interface GitHUbAPIResponse<T> {
+export interface GitHubAPIResponse<T> {
   rateLimitInformation: RateLimitInformation;
   data: T;
 }
 
 export type GitHubAPIFetcher = <T>(
   request: GitHubAPIRequest
-) => PResult<GitHUbAPIResponse<T>, AnyFetchError>;
+) => PResult<GitHubAPIResponse<T>, AnyFetchError>;
