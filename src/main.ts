@@ -1,6 +1,8 @@
 import * as chalk from 'chalk';
-import { humanizeBool } from './utils/human';
+import { mainFollowListsFetcher } from './core/fetchers';
+import { humanizeBool, mapApplicationErrorToUserMessage } from './utils/human';
 import * as io from './utils/io';
+import { isErr } from './utils/result';
 
 export function main(args: string[]): void {
   void args;
@@ -45,27 +47,27 @@ async function run() {
     chalk`{cyan https://github.com/settings/tokens/new}`,
     ''
   ]);
-  let usePersonalToken = await io.getsBoolean(
-    'Do you want to use a personal access token?',
+  let useAccessToken = await io.getsBoolean(
+    'Do you want to use a personal access token to increase that limit?',
     { defaultResponse: 'yes' }
   );
-  let personalToken: null | string = null;
-  if (usePersonalToken) {
+  let accessToken: string | undefined;
+  if (useAccessToken) {
     lastStep = io.registerStep({
       ...lastStep,
-      'Use personal token:': humanizeBool(usePersonalToken)
+      'Use personal token:': humanizeBool(useAccessToken)
     });
     io.puts([
       'You can create a new personal token at:',
       chalk`{cyan https://github.com/settings/tokens/new}`,
       '',
-      chalk`If you do not want to use a personal access token, press {bold Enter} (leave the field blank).`,
+      chalk`If you {bold DON'T} want to use a personal access token, press {bold Enter} (leave the field blank).`,
       ''
     ]);
-    personalToken = await io.gets('Enter your GitHub personal token: ');
-    if (!personalToken) {
-      personalToken = null;
-      usePersonalToken = false;
+    accessToken = await io.gets('Enter your GitHub personal token: ');
+    if (!accessToken) {
+      accessToken = undefined;
+      useAccessToken = false;
     }
   }
 
@@ -75,7 +77,16 @@ async function run() {
   //
   io.registerStep({
     ...lastStep,
-    'Use personal token:': humanizeBool(usePersonalToken)
+    'Use personal token:': humanizeBool(useAccessToken)
   });
-  console.log({ username, personalToken });
+  const result = await mainFollowListsFetcher({
+    username,
+    accessToken
+  });
+  if (isErr(result)) {
+    const message = mapApplicationErrorToUserMessage(result.data);
+    io.puts(chalk`{red error:} ${message}`);
+    process.exit(1);
+  }
+  console.log(result.data);
 }
